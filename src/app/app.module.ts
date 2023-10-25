@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { GoogleMapsModule } from '@angular/google-maps'
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -8,7 +8,9 @@ import { AppComponent } from './app.component';
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    GoogleMapsModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
