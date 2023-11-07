@@ -47,72 +47,70 @@ downloadAsSVG() {
   }
 }
 
-
-
 downloadAsJPEG() {
   var node = document.getElementById('content');
-
-  if (node) { // Check if node is not null
+  if (node) {
     // Use the htmlToImage library to convert the HTML content to a data URL as a JPEG image
     htmlToImage.toJpeg(node, { quality: 1 })
-      .then(function (dataUrl: any) {
+      .then(function (dataUrl) {
+        console.log('Data URL:', dataUrl);
+
         var link = document.createElement('a');
-        link.download = 'my-image-name.jpeg'; // Set the filename with the .jpeg extension
+        link.download = 'my-image-name.jpeg';
         link.href = dataUrl;
-        link.style.display = 'none'; // Hide the link
+        link.style.display = 'none';
         document.body.appendChild(link);
 
-        // Programmatically click on the link to initiate the download
         link.click();
 
-        // Clean up by removing the link
         document.body.removeChild(link);
       })
-      .catch(function (error: any) {
+      .catch(function (error) {
         console.error('Oops, something went wrong!', error);
       });
   } else {
-    console.error('Element with ID "content" not found.'); // Handle the case where the element is not found
+    console.error('Element with ID "content" not found.');
   }
 }
 
 
 
 
-downloadAsPng(){
-    var node:any = document.getElementById('content');
-     // Use the htmlToImage library to convert the HTML content to a data URL
-  htmlToImage.toPng(node)
-  .then(function (dataUrl) {
-    console.log(dataUrl);
-     // Convert the data URL to a Blob
-     var byteString = atob(dataUrl.split(',')[1]);
-     var mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
-     var arrayBuffer = new ArrayBuffer(byteString.length);
-     var uint8Array = new Uint8Array(arrayBuffer);
-     for (var i = 0; i < byteString.length; i++) {
-       uint8Array[i] = byteString.charCodeAt(i);
-     }
-     var blob = new Blob([arrayBuffer], { type: mimeString });
 
-     // Create an 'a' element and trigger the download programmatically
-     var link = document.createElement('a');
-     link.href = URL.createObjectURL(blob);
-     link.download = 'image.png'; // Set the filename
-     link.style.display = 'none'; // Hide the link
-     document.body.appendChild(link);
+ downloadAsPng() {
+  var node = document.getElementById('content');
+  if (node) {
+    htmlToImage.toPng(node)
+      .then(function (dataUrl) {
+        console.log('Data URL:', dataUrl);
 
-     // Programmatically click on the link to initiate the download
-     link.click();
+        var byteString = atob(dataUrl.split(',')[1]);
+        var mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
+        var arrayBuffer = new ArrayBuffer(byteString.length);
+        var uint8Array = new Uint8Array(arrayBuffer);
+        for (var i = 0; i < byteString.length; i++) {
+          uint8Array[i] = byteString.charCodeAt(i);
+        }
+        var blob = new Blob([arrayBuffer], { type: mimeString });
 
-     // Clean up by removing the link
-     document.body.removeChild(link);
-   })
+        var link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'image.png';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+      })
       .catch(function (error) {
-        console.error('oops, something went wrong!', error);
+        console.error('Oops, something went wrong!', error);
       });
- 
+  } else {
+    console.error('Element with ID "content" not found.');
   }
+}
+
 
 
 
@@ -139,25 +137,26 @@ downloadAsPng(){
 
   // convert to pdf
   
-  @ViewChild('content',{static:true}) el!:ElementRef<HTMLImageElement>
+  @ViewChild('content', { static: true }) el!: ElementRef<HTMLImageElement>;
+
   convertTopdf() {
-    html2canvas(this.el.nativeElement).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
+  html2canvas(this.el.nativeElement).then(canvas => {
+    console.log('Captured canvas:', canvas);
 
-      const pdf = new jsPDF({
-        orientation: 'portrait'
-      });
+    const imgData = canvas.toDataURL('image/png');
 
-      const imageProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imageProps.height * pdfWidth) / imageProps.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save("output.pdf");
+    const pdf = new jsPDF({
+      orientation: 'portrait'
     });
-  }
 
+    const imageProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imageProps.height * pdfWidth) / imageProps.width;
 
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save("output.pdf");
+  });
+}
 
 
 }

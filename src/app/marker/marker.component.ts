@@ -1,83 +1,77 @@
-import { Component } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { ChatGptService } from '../gpt.service';
+import { AfterViewInit, Component } from '@angular/core';
 
 @Component({
   selector: 'app-marker',
   templateUrl: './marker.component.html',
   styleUrls: ['./marker.component.css'],
 })
-export class MarkerComponent {
-  constructor(private gptService: ChatGptService) {}
+export class MarkerComponent implements AfterViewInit {
+  map: any;
+  markers: google.maps.Marker[] = [];
 
-  http = new HttpClientModule();
+  constructor() {}
+
+  ngAfterViewInit(): void {
+    const ele = document.getElementById("content") as HTMLElement;
+    this.map = new google.maps.Map(ele, {
+      zoom: 4,
+      center: this.center,
+    });
+
+    // Create and add markers
+    const marker1 = new google.maps.Marker({
+      position: { lat: 10.2188343994493, lng: 92.57713289999998 },
+      map: this.map,
+      title: 'Andhra Pradesh',
+    });
+
+    // Add a click event listener to zoom in on marker click
+    marker1.addListener('click', () => {
+      this.zoomInOnClick(marker1);
+    });
+    this.markers.push(marker1);
+
+    const marker2 = new google.maps.Marker({
+      position: { lat: 15.924090500015737, lng: 80.18638089999999 },
+      map: this.map,
+      title: 'Andaman',
+    });
+
+    // Add a click event listener to zoom in on marker click
+    marker2.addListener('click', () => {
+      this.zoomInOnClick(marker2);
+    });
+    this.markers.push(marker2);
+
+    const marker3 = new google.maps.Marker({
+      position: { lat: 28.7041, lng: 77.1025 },
+      map: this.map,
+      title: 'Delhi',
+    });
+
+    // Add a click event listener to zoom in on marker click
+    marker3.addListener('click', () => {
+      this.zoomInOnClick(marker3);
+    });
+    this.markers.push(marker3);
+
+
+    // Event listener for zoom change
+    const m = this.map;
+    google.maps.event.addListener(m, 'zoom_changed', function (event: any) {
+      console.log(m.getZoom());
+    });
+  }
+
   center: google.maps.LatLngLiteral = {
     lat: 20.5937,
     lng: 78.9629,
   };
 
-  zoom = 3;
-  markerOptions: google.maps.MarkerOptions = {
-    draggable: false,
-  };
-  markerPositions: google.maps.LatLngLiteral[] = [
-    {
-      lat: 10.2188343994493,
-      lng: 92.57713289999998,
-    },
-    {
-      lat: 15.924090500015737,
-      lng: 80.18638089999999,
-    },
-    {
-      lat: 28.093770199935786,
-      lng: 94.5921326,
-    },
-  ];
-  onMarkerClick(event: google.maps.MapMouseEvent): void {
-    // Check if event.latLng is not null
-    this.test();
-
-    if (event.latLng) {
-      // Get the clicked location
-      const clickedLocation = event.latLng;
-
-      // Set the map's center to the clicked location
-      this.center = {
-        lat: clickedLocation.lat(),
-        lng: clickedLocation.lng(),
-      };
-
-      this.zoom += 0.8; // Adjust the zoom level as needed
-    }
+  zoomInOnClick(marker: google.maps.Marker) {
+    const currentZoom = this.map.getZoom();
+    const newZoom = currentZoom + 2; // Increase the zoom level by 2
+    this.map.setZoom(newZoom);
+    this.map.setCenter(marker.getPosition()); // Center the map on the clicked marker
   }
-
-  test() {
-    this.gptService
-      .generateResponse(
-        'Give me the coordinates of top 10 visiting places in india'
-      )
-      .subscribe((value) => {
-        console.log(value);
-      });
-  }
-
-  /*
-  markers = [
-    {
-      position: new google.maps.LatLng(40.73061, 73.935242),
-      map: this['map'],
-      title: "Marker 1"
-    },
-    {
-      position: new google.maps.LatLng(32.06485, 34.763226),
-      map: this['map'],
-      title: "Marker 2"
-    }
-  ];
-  */
 }
-
-/**
- * app -> chatgpt api request - response - google maps - plot
- */
