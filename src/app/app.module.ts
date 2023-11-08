@@ -8,6 +8,7 @@ import { ButtonsComponent } from './buttons/buttons.component';
 import { InfowindowComponent } from './infowindow/infowindow.component';
 import {HttpClientModule} from '@angular/common/http'
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +21,8 @@ import {HttpClientModule} from '@angular/common/http'
     BrowserModule,
     GoogleMapsModule,
     ExportAsModule,
-    HttpClientModule
+    HttpClientModule,
+   
    
     
     

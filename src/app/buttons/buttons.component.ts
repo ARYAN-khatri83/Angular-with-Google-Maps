@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {  ElementRef ,ViewChild } from '@angular/core';
-import { MapInfoWindow, MapMarker , GoogleMap } from '@angular/google-maps';
-import {ExportAsService, ExportAsConfig} from 'ngx-export-as';
 import  jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import * as htmlToImage from 'html-to-image';
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
+
 
 @Component({
   selector: 'app-buttons',
@@ -19,21 +19,38 @@ ngOnInit(): void {
   
 }
 
+ downloadAsSVG() {
+  var node = document.getElementById('contents');
 
-downloadAsSVG() {
-  var node = document.getElementById('content');
+  if (node) {
+    const cloneNode = node.cloneNode(true);
+    htmlToImage.toSvg(cloneNode as any)
+      .then(function (dataUrl) {
+        var link = document.createElement('a');
+        link.download = 'my-image-name.svg';
+        link.href = dataUrl;
+        console.log(dataUrl);
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
+    }
+ }
+
+  downloadAsJPEG() {
+  var node = document.getElementById('contents');
 
   if (node) { // Check if node is not null
-    // Use the htmlToImage library to convert the HTML content to a data URL as a JPEG image
-    htmlToImage.toSvg(node, { quality: 0.95 })
+    htmlToImage.toJpeg(node, { quality: 0.95 })
       .then(function (dataUrl: any) {
         var link = document.createElement('a');
-        link.download = 'my-image-name.svg'; // Set the filename with the .jpeg extension
+        link.download = 'my-image-name.jpeg'; 
         link.href = dataUrl;
-        link.style.display = 'none'; // Hide the link
+        link.style.display = 'none'; // 
         document.body.appendChild(link);
 
-        // Programmatically click on the link to initiate the download
+       
         link.click();
 
         // Clean up by removing the link
@@ -47,29 +64,31 @@ downloadAsSVG() {
   }
 }
 
-downloadAsJPEG() {
-  var node = document.getElementById('content');
+downloadAsPng() {
+  var node = document.getElementById('contents');
   if (node) {
-    // Use the htmlToImage library to convert the HTML content to a data URL as a JPEG image
-    htmlToImage.toJpeg(node, { quality: 1 })
+    htmlToImage.toPng(node)
       .then(function (dataUrl) {
-        console.log('Data URL:', dataUrl);
-
         var link = document.createElement('a');
-        link.download = 'my-image-name.jpeg';
+        var timestamp = new Date().getTime(); // Unique timestamp for each download
+        link.download = 'my-image-' + timestamp + '.png';
         link.href = dataUrl;
         link.style.display = 'none';
         document.body.appendChild(link);
 
         link.click();
 
+        // Clean up the download link
         document.body.removeChild(link);
+
+        // Revoke the URL to free up resources
+        URL.revokeObjectURL(link.href);
       })
       .catch(function (error) {
-        console.error('Oops, something went wrong!', error);
+        console.error('Error capturing image:', error);
       });
   } else {
-    console.error('Element with ID "content" not found.');
+    console.error('Element with ID "contents" not found.');
   }
 }
 
@@ -77,66 +96,9 @@ downloadAsJPEG() {
 
 
 
- downloadAsPng() {
-  var node = document.getElementById('content');
-  if (node) {
-    htmlToImage.toPng(node)
-      .then(function (dataUrl) {
-        console.log('Data URL:', dataUrl);
-
-        var byteString = atob(dataUrl.split(',')[1]);
-        var mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
-        var arrayBuffer = new ArrayBuffer(byteString.length);
-        var uint8Array = new Uint8Array(arrayBuffer);
-        for (var i = 0; i < byteString.length; i++) {
-          uint8Array[i] = byteString.charCodeAt(i);
-        }
-        var blob = new Blob([arrayBuffer], { type: mimeString });
-
-        var link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'image.png';
-        link.style.display = 'none';
-        document.body.appendChild(link);
-
-        link.click();
-
-        document.body.removeChild(link);
-      })
-      .catch(function (error) {
-        console.error('Oops, something went wrong!', error);
-      });
-  } else {
-    console.error('Element with ID "content" not found.');
-  }
-}
-
-
-
-
-
-
-
-
-  /*
-  constructor() {}
-  ngOnInit(): void {}
-  display: any;
-  center: google.maps.LatLngLiteral = {
-      lat: 24,
-      lng: 12
-  };
-  zoom = 4;
-  moveMap(event: google.maps.MapMouseEvent) {
-      if (event.latLng != null) this.center = (event.latLng.toJSON());
-  }
-  move(event: google.maps.MapMouseEvent) {
-      if (event.latLng != null) this.display = event.latLng.toJSON();
-  }
-  */
 
   // convert to pdf
-  
+  /*
   @ViewChild('content', { static: true }) el!: ElementRef<HTMLImageElement>;
 
   convertTopdf() {
@@ -157,6 +119,8 @@ downloadAsJPEG() {
     pdf.save("output.pdf");
   });
 }
+*/
 
 
 }
+
