@@ -7,7 +7,7 @@ import { MarkerComponent } from './marker/marker.component';
 import { ButtonsComponent } from './buttons/buttons.component';
 import { InfowindowComponent } from './infowindow/infowindow.component';
 import {HttpClientModule} from '@angular/common/http'
-
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,10 +22,7 @@ import {HttpClientModule} from '@angular/common/http'
     GoogleMapsModule,
     ExportAsModule,
     HttpClientModule,
-   
-   
-    
-    
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

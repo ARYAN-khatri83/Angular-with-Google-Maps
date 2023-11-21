@@ -1,11 +1,29 @@
 <!-- MAP -->
 <div id="contents" #contents>
-  <!-- <google-map height="100vh" width="100vw"  [center]="center" [zoom]="zoom" (mapDblclick)="move($event)"  (zoomChanged)="changeZoom($event)">
-    <map-marker
-    *ngFor="let markerPosition of markerPositions"
-    [position]="markerPosition"
-    [options]="markerOptions"
-    (mapClick)="onMarkerClick($event)"
-    ></map-marker>
-  </google-map> -->
+
+
 </div>
+
+<form>
+  <label for="latitude">Latitude:</label>
+  <input type="text" id="latitude" name="latitude" [(ngModel)]="latitude" placeholder="Enter latitude" required>
+
+  <label for="longitude">Longitude:</label>
+  <input type="text" id="longitude" name="longitude" [(ngModel)]="longitude" placeholder="Enter longitude" required>
+
+  <button (click)="onSubmit()">Submit</button>
+</form>
+
+<p>Latitude: {{ latitude }}</p>
+<p>Longitude: {{ longitude }}</p>
+
+
+<label for="removeMarkerDropdown">Select Marker to Remove:</label>
+<select id="removeMarkerDropdown" [(ngModel)]="selectedMarkerIndex">
+  <option *ngFor="let marker of markers; let i = index" [value]="i">{{ markers[i + 1]['title'] }}</option>
+  <option *ngFor="let newMarker of removeMarkers; let i = index" [value]="markers.length + i">Newly Added Marker
+    {{ i + 1 }}</option>
+</select>
+<br>
+<button (click)="removeMarkerByIndex(selectedMarkerIndex)">Remove Selected Marker</button>
+<br>

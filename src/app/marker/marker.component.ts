@@ -7,126 +7,131 @@ import { AfterViewInit, Component } from '@angular/core';
 })
 export class MarkerComponent implements AfterViewInit {
   map: any;
-  markers: google.maps.Marker[] = [];
+  markers: any[] = [];
   minZoomLevel = 2;
 
-  constructor() {}
+  latitude: string = '';
+  longitude: string = '';
+  selectedMarkerIndex: any;
+  removeMarkers: any;
 
-  
+  center: google.maps.LatLngLiteral = {
+    lat: 20.5937,
+    lng: 78.9629,
+  };
+
+  createCustomMarkerIcon(color: string): google.maps.Symbol {
+    return {
+      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+      scale: 6, // Adjust the scale as needed
+      fillColor: color,
+      fillOpacity: 1,
+      strokeWeight: 0,
+    };
+  }
+
+  zoomInOnClick(map: google.maps.Map, marker: google.maps.Marker) {
+    const currentZoom = map.getZoom();
+
+    if (currentZoom !== null && currentZoom !== undefined) {
+      const newZoom = currentZoom + 2; // Increase the zoom level by 2
+
+      const markerPosition = marker.getPosition();
+      if (markerPosition !== null && markerPosition !== undefined) {
+        map.setZoom(newZoom);
+        map.setCenter(markerPosition); // Center the map on the clicked marker
+      }
+    }
+  }
+
+  // Common method to create markers
+  createMarker(map: google.maps.Map, location: { lat: number; lng: number; label: string; color: string; }, label: string, color: string) {
+    const marker = new google.maps.Marker({
+      position: location,
+      map: map,
+      label: label,
+      icon: {
+        path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+        scale: 5,
+        fillColor: color,
+        fillOpacity: 1,
+        strokeColor: '#fff',
+        strokeWeight: 1,
+      },
+    });
+
+    marker.addListener('click', () => {
+      this.zoomInOnClick(map, marker);
+    });
+
+    return marker;
+  }
+
   ngAfterViewInit(): void {
-    const ele = document.getElementById("contents") as HTMLElement;
+    const ele = document.getElementById('contents') as HTMLElement;
     this.map = new google.maps.Map(ele, {
       zoom: 4,
       center: this.center,
       minZoom: this.minZoomLevel, // Set the minimum zoom level
     });
+
     google.maps.event.addListener(this.map, 'zoom_changed', () => {
       if (this.map.getZoom() < this.minZoomLevel) {
         this.map.setZoom(this.minZoomLevel);
       }
       console.log(this.map.getZoom());
     });
-  
 
-    // Create and add markers
+    const locations = [
+      { lat: 56.1304, lng: 106.3468, label: 'Canada', color: '#FF0000' },
+      { lat: 71.7069, lng: 42.6043, label: 'Greenland', color: '#000000' },
+      { lat: 14.235, lng: 51.9253, label: 'Brazil', color: '#B06161' },
+      { lat: 10.2188343994493, lng: 92.57713289999998, label: 'Andaman', color: '#860A35' },
+      { lat: 15.924090500015737, lng: 80.18638089999999, label: 'Andhar Pradesh', color: '#508D69' },
+      { lat: 28.7041, lng: 77.1025, label: 'Delhi', color: '#29ADB2' },
+    ];
 
-    const marker5 = new google.maps.Marker({
-      position: { lat: 56.1304, lng: 106.3468 },
-      map: this.map,
-      title: 'Canada',
-    });
-  
-    //  a click event listener to zoom in on marker click
-    marker5.addListener('click', () => {
-      this.zoomInOnClick(marker5);
-    });
-    this.markers.push(marker5);
-
-
-    const marker6 = new google.maps.Marker({
-      position: { lat: 71.7069, lng: 42.6043 },
-      map: this.map,
-      title: 'Greenland',
-    });
-  
-    //  a click event listener to zoom in on marker click
-    marker6.addListener('click', () => {
-      this.zoomInOnClick(marker6);
-    });
-    this.markers.push(marker6);
-    
-
-    const marker4 = new google.maps.Marker({
-      position: { lat: 14.2350, lng: 51.9253 },
-      map: this.map,
-      title: 'Brazil',
-    });
-  
-    //  a click event listener to zoom in on marker click
-    marker4.addListener('click', () => {
-      this.zoomInOnClick(marker4);
-    });
-    this.markers.push(marker4);
-
-    const marker1 = new google.maps.Marker({
-      position: { lat: 10.2188343994493, lng: 92.57713289999998 },
-      map: this.map,
-      title: 'Andhra Pradesh',
-    });
-
-    //  a click event listener to zoom in on marker click
-    marker1.addListener('click', () => {
-      this.zoomInOnClick(marker1);
-    });
-    this.markers.push(marker1);
-
-    const marker2 = new google.maps.Marker({
-      position: { lat: 15.924090500015737, lng: 80.18638089999999 },
-      map: this.map,
-      title: 'Andaman',
-    });
-
-
-    marker2.addListener('click', () => {
-      this.zoomInOnClick(marker2);
-    });
-    this.markers.push(marker2);
-
-    const marker3 = new google.maps.Marker({
-      position: { lat: 28.7041, lng: 77.1025 },
-      map: this.map,
-      title: 'Delhi',
-    });
-
-   
-    marker3.addListener('click', () => {
-      this.zoomInOnClick(marker3);
-    });
-    this.markers.push(marker3);
-
-
-    // Event listener for zoom change
-    const m = this.map;
-    google.maps.event.addListener(m, 'zoom_changed', function (event: any) {
-      console.log(m.getZoom());
+    locations.forEach(location => {
+      const marker = this.createMarker(this.map, location, location.label, location.color);
+      this.markers.push(marker);
     });
   }
 
+  onSubmit(): void {
+    // Ensure latitude and longitude are provided
+    if (!this.latitude || !this.longitude) {
+      console.error('Latitude and Longitude are required.');
+      return;
+    }
 
+    // Check if the map is already initialized
+    if (!this.map) {
+      console.error(
+        'Map is not initialized. Ensure the map is initialized before calling submit.'
+      );
+      return;
+    }
 
-  center: google.maps.LatLngLiteral = {
-    lat: 20.5937,
-    lng: 78.9629,
-  };
-  
+    // Create a marker on the existing map
+    const marker = new google.maps.Marker({
+      position: {
+        lat: parseFloat(this.latitude),
+        lng: parseFloat(this.longitude),
+      },
+      map: this.map,
+      title: 'Location',
+    });
 
-  zoomInOnClick(marker: google.maps.Marker) {
-    const currentZoom = this.map.getZoom();
-    const newZoom = currentZoom + 2; // Increase the zoom level by 2
-    this.map.setZoom(newZoom);
-    this.map.setCenter(marker.getPosition()); // Center the map on the clicked marker
+    // Center the map on the new marker
+    this.map.setCenter(marker.getPosition());
   }
 
-  
+  removeMarkerByIndex(index: number) {
+    // Check if the index is valid
+    if (index >= 0 && index < this.markers.length) {
+      // Remove the marker from the map
+      this.markers[index].setMap(null);
+      this.markers.splice(index, 1);
+    }
+  }
 }
-
