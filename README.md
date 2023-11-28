@@ -1,50 +1,27 @@
-Marker Component for Angular with Google Maps Integration
+# Maps
 
-Features: 
-Dynamic Markers: Create and display markers on a Google Map with customizable icons, labels, and colors. 
-Zoom Interaction: Zoom in on a marker when clicked to get a closer view of the location. 
-User Input Handling: Submit latitude and longitude values via a form to add a new marker on the map. Validates input to ensure only numeric values are accepted. 
-Marker Removal: Remove markers by clicking on them or using an external control.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.5.
 
-How to Use: 
-Initialization: The component initializes a Google Map with a specified zoom level and minimum zoom. 
-Dynamic Markers: Markers are dynamically created based on predefined locations. Customize labels and colors. 
-Zoom Interaction: Clicking on a marker zooms in on the location.
-User Input: Enter latitude and longitude in the form and click "Submit" to add a new marker. 
-Marker Removal: Remove markers either by clicking on them or using the provided remove function.
+## Development server
 
-Dependencies:
-Angular Google ,
-Maps JavaScript API
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-Usage: 
-Install Angular and set up your project. 
-Include the MarkerComponent in your application. 
-Customize the map, markers, and interactions as needed. 
-Enjoy a dynamic map with interactive markers!
+## Code scaffolding
 
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-Buttons Component for Image Download
+## Build
 
-Features: 
-SVG Download: Clones the content of an HTML element with the ID "contents" and downloads it as an SVG image. Generates a data URL and triggers a download of the SVG file.
-JPEG Download: Uses the html-to-image library to convert the content of the "contents" element to a JPEG image. Allows customization of the image quality.
-PNG Download: Captures the content of the "contents" element and downloads it as a PNG image. Generates a unique timestamp for each download to avoid overwriting existing files.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
+## Running unit tests
 
-How to Use:
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-1.Include the ButtonsComponent in your Angular application. 
-2.Add a target HTML element with the ID "contents" that you want to capture.
-3.Use the provided buttons to download the content in different image formats.
-4.Enjoy seamless image downloading functionality!
+## Running end-to-end tests
 
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-Dependencies: 
-Angular ,
-html-to-image library
+## Further help
 
-Usage: 
-Install Angular and set up your project. 
-Add the ButtonsComponent to your application. 
-Customize the HTML content you want to capture by adjusting the element with the ID "contents." Use the provided buttons to initiate downloads in SVG, JPEG, and PNG formats. Enhance your application with dynamic image export capabilities!
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
