@@ -50,7 +50,7 @@ export class GptComponent implements OnInit {
     let url = 'https://api.openai.com/v1/chat/completions';
     let httpHeaders = new HttpHeaders().set(
       'Authorization',
-      'Bearer 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'
+      'Bearer "API KEY" '
     );
 
     this.messages[0].content =
