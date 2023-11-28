@@ -2,5 +2,27 @@
 <app-marker></app-marker>
 <app-buttons></app-buttons>
 
+
 <!--
 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 -->
+
+
+
+
+<nav class="p-3">
+    <ul class="nav nav-pills">
+      <li *ngFor="let action of actions">
+        <button 
+        [ngClass]="action===currentAction
+        ?'btn btn-success ms-1':'btn btn-outline-success ms-1'"
+    
+        (click)="handleRoute(action)" class= "btn btn-outline-success ms-1"> 
+          {{action.title}}
+          
+          <i class="bi bi-{{action.icon}}"></i>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+<router-outlet></router-outlet>

@@ -97,6 +97,14 @@ export class MarkerComponent implements AfterViewInit {
     });
   }
 
+  updateMap(data: any) {
+    this.map = new google.maps.Map(data.ele, {
+      zoom: 4,
+      center: this.center,
+      minZoom: this.minZoomLevel, // Set the minimum zoom level
+    });
+
+  }
   onSubmit(): void {
     // Ensure latitude and longitude are provided
     if (!this.latitude || !this.longitude) {

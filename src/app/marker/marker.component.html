@@ -1,15 +1,14 @@
 <!-- MAP -->
 <div id="contents" #contents>
-
-
 </div>
-
 <form>
   <label for="latitude">Latitude:</label>
-  <input type="text" id="latitude" name="latitude" [(ngModel)]="latitude" placeholder="Enter latitude" required>
+  <input type="text" id="latitude" name="latitude" [(ngModel)]="latitude" placeholder="Enter latitude" required
+    pattern="^[0-9]*$">
 
   <label for="longitude">Longitude:</label>
-  <input type="text" id="longitude" name="longitude" [(ngModel)]="longitude" placeholder="Enter longitude" required>
+  <input type="text" id="longitude" name="longitude" [(ngModel)]="longitude" placeholder="Enter longitude" required
+    pattern="^[0-9]*$">
 
   <button (click)="onSubmit()">Submit</button>
 </form>
@@ -20,9 +19,8 @@
 
 <label for="removeMarkerDropdown">Select Marker to Remove:</label>
 <select id="removeMarkerDropdown" [(ngModel)]="selectedMarkerIndex">
-  <option *ngFor="let marker of markers; let i = index" [value]="i">{{ markers[i + 1]['title'] }}</option>
-  <option *ngFor="let newMarker of removeMarkers; let i = index" [value]="markers.length + i">Newly Added Marker
-    {{ i + 1 }}</option>
+  <option *ngFor="let marker of markers; let i = index" [value]="i">{{ markers[i + 1]['label'] }}</option>
+
 </select>
 <br>
 <button (click)="removeMarkerByIndex(selectedMarkerIndex)">Remove Selected Marker</button>
