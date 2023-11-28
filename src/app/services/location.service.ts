@@ -11,7 +11,7 @@ export class LocationService {
 
   getLocations(): Observable<any> {
     const url = 'https://api.openai.com/v1/chat/completions';
-    const httpHeaders = new HttpHeaders().set('Authorization', 'Bearer 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');
+    const httpHeaders = new HttpHeaders().set('Authorization', 'Bearer "API KEY" ');
     const payload = {
       model: 'gpt-3.5-turbo',
       messages: [
